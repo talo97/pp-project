@@ -114,23 +114,23 @@ public class UserController {
         }
     }
 
-    @PostMapping("/createAdmin")
-    public ResponseEntity<?> createAdmin(){
-        if(serviceUser.findByLogin("admin").isPresent()){
-            return ResponseEntity.badRequest().build();
-        }else{
-            EntityUser user = new EntityUser();
-            user.setPassword("admin");
-            user.setName("ADMIN");
-            user.setLastName("ADMIN");
-            user.setBirthdate(Date.valueOf("2020-06-13"));
-            user.setUserGroup(EnumUserGroup.ADMIN);
-            user.setPoints(0l);
-            user.setEmail("admin@mail.xd");
-            user.setLogin("admin");
-            serviceUser.save(user);
-            return ResponseEntity.ok("Admin has been created");
-        }
-    }
+//    @PostMapping("/createAdmin")
+//    public ResponseEntity<?> createAdmin(){
+//        if(serviceUser.findByLogin("admin").isPresent()){
+//            return ResponseEntity.badRequest().build();
+//        }else{
+//            EntityUser user = new EntityUser();
+//            user.setPassword("admin");
+//            user.setName("ADMIN");
+//            user.setLastName("ADMIN");
+//            user.setBirthdate(Date.valueOf("2020-06-13"));
+//            user.setUserGroup(EnumUserGroup.ADMIN);
+//            user.setPoints(0l);
+//            user.setEmail("admin@mail.xd");
+//            user.setLogin("admin");
+//            serviceUser.save(user);
+//            return ResponseEntity.ok("Admin has been created");
+//        }
+//    }
 
 }
