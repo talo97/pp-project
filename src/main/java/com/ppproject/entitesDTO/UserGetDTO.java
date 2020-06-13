@@ -1,5 +1,6 @@
 package com.ppproject.entitesDTO;
 
+import com.ppproject.common.EnumUserGroup;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,6 @@ public class UserGetDTO {
     private Date birthdate;
 
     private String email;
+
+    private EnumUserGroup userGroup;
 }
