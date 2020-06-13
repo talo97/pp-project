@@ -32,10 +32,8 @@ public class AmazonClient {
     private String endpointUrl;
     @Value("${amazonProperties.bucketName}")
     private String bucketName;
-    @Value("${amazonProperties.accessKey}")
-    private String accessKey;
-    @Value("${amazonProperties.secretKey}")
-    private String secretKey;
+    private String accessKey = System.getenv("accessKey");
+    private String secretKey = System.getenv("secretKey");
 
     private Logger logger = LoggerFactory.getLogger(AmazonClient.class);
 
