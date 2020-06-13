@@ -16,8 +16,6 @@ public class UserGetDTO {
 
     private String login;
 
-    private String password;
-
     private String name;
 
     private String lastName;
