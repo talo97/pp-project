@@ -1,5 +1,8 @@
 package com.ppproject.controllers;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.ppproject.common.AmazonClient;
 import com.ppproject.entitesDTO.GarbagePointGetDTO;
 import com.ppproject.entitesDTO.GarbagePointPostDTO;
 import com.ppproject.entitesDTO.UserGetDTO;
@@ -11,8 +14,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,20 +30,42 @@ public class GarbageDumpPointController {
     private final ModelMapper modelMapper;
     private final ServiceGarbageDumpPoint serviceGarbageDumpPoint;
     private final ServiceUser serviceUser;
+    private AmazonClient amazonClient;
 
-    public GarbageDumpPointController(ModelMapper modelMapper, ServiceGarbageDumpPoint serviceGarbageDumpPoint, ServiceUser serviceUser) {
+    public GarbageDumpPointController(ModelMapper modelMapper, ServiceGarbageDumpPoint serviceGarbageDumpPoint, ServiceUser serviceUser, AmazonClient amazonClient) {
         this.modelMapper = modelMapper;
         this.serviceGarbageDumpPoint = serviceGarbageDumpPoint;
         this.serviceUser = serviceUser;
+        this.amazonClient = amazonClient;
     }
+
     private Optional<EntityUser> getUserFromToken() {
         return serviceUser.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     @PostMapping("/garbagePoints")
-    public ResponseEntity<GarbagePointGetDTO> addGarbagePoint(@Valid @RequestBody GarbagePointPostDTO garbagePoint){
+    public ResponseEntity<GarbagePointGetDTO> addGarbagePoint(@Valid @ModelAttribute GarbagePointPostDTO garbagePoint, @Valid @RequestPart MultipartFile image) throws IOException {
         EntityUser user = getUserFromToken().get();
-        GarbagePointGetDTO garbagePointGetDTO = modelMapper.map(serviceGarbageDumpPoint.save(garbagePoint, user), GarbagePointGetDTO.class);
+        String fileUrl = "";
+        try {
+            fileUrl = amazonClient.uploadFile(image);
+        } catch (AmazonServiceException ase) {
+            System.out.println("Caught an AmazonServiceException from GET requests, rejected reasons:");
+            System.out.println("Error Message:    " + ase.getMessage());
+            System.out.println("HTTP Status Code: " + ase.getStatusCode());
+            System.out.println("AWS Error Code:   " + ase.getErrorCode());
+            System.out.println("Error Type:       " + ase.getErrorType());
+            System.out.println("Request ID:       " + ase.getRequestId());
+            return ResponseEntity.badRequest().build();
+        } catch (AmazonClientException ace) {
+            System.out.println("Caught an AmazonClientException: ");
+            System.out.println("Error Message: " + ace.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (IOException ioe) {
+            System.out.println("IOE Error Message: " + ioe.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+        GarbagePointGetDTO garbagePointGetDTO = modelMapper.map(serviceGarbageDumpPoint.save(garbagePoint, user, fileUrl), GarbagePointGetDTO.class);
         garbagePointGetDTO.setUser(modelMapper.map(user, UserGetDTO.class));
         return ResponseEntity.ok(garbagePointGetDTO);
     }
@@ -65,12 +92,13 @@ public class GarbageDumpPointController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @GetMapping("/userGarbagePoints")
     public ResponseEntity<List<GarbagePointGetDTO>> getCurrentUserGarbagePoints() {
         Optional<EntityUser> currentUser = getUserFromToken();
         List<GarbagePointGetDTO> lst = new ArrayList<>();
-        currentUser.ifPresent(user->{
-            serviceGarbageDumpPoint.findByEntityUser(user).forEach(dumpPoint->{
+        currentUser.ifPresent(user -> {
+            serviceGarbageDumpPoint.findByEntityUser(user).forEach(dumpPoint -> {
                 GarbagePointGetDTO temp = modelMapper.map(dumpPoint, GarbagePointGetDTO.class);
                 temp.setUser(modelMapper.map(dumpPoint.getUser(), UserGetDTO.class));
                 lst.add(temp);
@@ -80,7 +108,7 @@ public class GarbageDumpPointController {
     }
 
     @GetMapping("/unverifiedGarbagePoints")
-    public ResponseEntity<List<GarbagePointGetDTO>> getUnverifiedGarbagePoints(){
+    public ResponseEntity<List<GarbagePointGetDTO>> getUnverifiedGarbagePoints() {
         List<GarbagePointGetDTO> lst = new ArrayList<>();
         serviceGarbageDumpPoint.findAllByVerifiedFalse().forEach(e -> {
             GarbagePointGetDTO temp = modelMapper.map(e, GarbagePointGetDTO.class);
@@ -88,6 +116,25 @@ public class GarbageDumpPointController {
             lst.add(temp);
         });
         return ResponseEntity.ok(lst);
+    }
+
+    @DeleteMapping("/garbagePoint/{id}")
+    public ResponseEntity<?> deleteGarbagePoint(@Valid @PathVariable Long id) {
+        Optional<EntityGarbageDumpPoint> garbageDumpPoint = serviceGarbageDumpPoint.get(id);
+        return garbageDumpPoint.map(entityGarbageDumpPoint -> {
+            serviceGarbageDumpPoint.delete(entityGarbageDumpPoint);
+            return ResponseEntity.ok("Successfully deleted");
+        }).orElse(ResponseEntity.badRequest().body("There is no garbage point with given ID"));
+    }
+
+    @PutMapping("verifyGarbagePoint")
+    public ResponseEntity<?> verifyGarbagePoint(@Valid @RequestBody Long garbagePointId) {
+        Optional<EntityGarbageDumpPoint> garbageDumpPoint = serviceGarbageDumpPoint.get(garbagePointId);
+        return garbageDumpPoint.map(entityGarbageDumpPoint -> {
+            entityGarbageDumpPoint.setVerified(true);
+            serviceGarbageDumpPoint.save(entityGarbageDumpPoint);
+            return ResponseEntity.ok("Successfully verified");
+        }).orElse(ResponseEntity.badRequest().body("There is no garbage point with given ID"));
     }
 
 }

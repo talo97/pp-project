@@ -72,7 +72,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .cors().and()
-                .authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.DELETE,"/api/garbagePoint/{id}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/api/verifyGarbagePoint").hasRole("ADMIN")
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()

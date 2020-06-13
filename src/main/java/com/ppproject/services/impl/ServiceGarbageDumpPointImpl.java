@@ -33,8 +33,9 @@ public class ServiceGarbageDumpPointImpl extends CommonServiceImpl<EntityGarbage
     }
 
     @Override
-    public EntityGarbageDumpPoint save(GarbagePointPostDTO garbagePoint, EntityUser user) {
+    public EntityGarbageDumpPoint save(GarbagePointPostDTO garbagePoint, EntityUser user, String fileUrl) {
         EntityGarbageDumpPoint toSave = modelMapper.map(garbagePoint, EntityGarbageDumpPoint.class);
+        toSave.setImageUrl(fileUrl);
         toSave.setUser(user);
         return save(toSave);
     }

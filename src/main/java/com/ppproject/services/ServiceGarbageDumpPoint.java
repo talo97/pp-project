@@ -12,5 +12,5 @@ public interface ServiceGarbageDumpPoint extends CommonService<EntityGarbageDump
 
     List<EntityGarbageDumpPoint> findAllByVerifiedFalse();
 
-    EntityGarbageDumpPoint save(GarbagePointPostDTO garbagePoint, EntityUser user);
+    EntityGarbageDumpPoint save(GarbagePointPostDTO garbagePoint, EntityUser user, String fileUrl);
 }

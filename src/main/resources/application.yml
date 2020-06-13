@@ -1,0 +1,10 @@
+amazonProperties:
+  endpointUrl: https://s3.us-east-2.amazonaws.com
+  accessKey: AKIAX24BOY55TCBEH4ND
+  secretKey: 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
+  bucketName: uni-project-pp
+spring:
+  servlet:
+  multipart:
+  max-file-size: 100MB
+  max-request-size: 100MB
