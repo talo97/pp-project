@@ -1,5 +1,6 @@
 package com.ppproject.controllers;
 
+import com.ppproject.common.EnumUserGroup;
 import com.ppproject.entitesDTO.UserGetDTO;
 import com.ppproject.entitesDTO.UserPostDTO;
 import com.ppproject.entitesDTO.UserPutDTO;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -109,6 +111,25 @@ public class UserController {
             return ResponseEntity.ok(modelMapper.map(user.get(), UserGetDTO.class));
         }else{
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/createAdmin")
+    public ResponseEntity<?> createAdmin(){
+        if(serviceUser.findByLogin("admin").isPresent()){
+            return ResponseEntity.badRequest().build();
+        }else{
+            EntityUser user = new EntityUser();
+            user.setPassword("admin");
+            user.setName("ADMIN");
+            user.setLastName("ADMIN");
+            user.setBirthdate(Date.valueOf("2020-06-13"));
+            user.setUserGroup(EnumUserGroup.ADMIN);
+            user.setPoints(0l);
+            user.setEmail("admin@mail.xd");
+            user.setLogin("admin");
+            serviceUser.save(user);
+            return ResponseEntity.ok("Admin has been created");
         }
     }
 
