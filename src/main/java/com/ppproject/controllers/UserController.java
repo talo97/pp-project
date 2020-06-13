@@ -86,7 +86,7 @@ public class UserController {
 
     @GetMapping("/currentUser")
     public ResponseEntity<UserGetDTO> getCurrentUser() {
-        return ResponseEntity.ok().body(modelMapper.map(getUserFromToken(), UserGetDTO.class));
+        return ResponseEntity.ok().body(modelMapper.map(getUserFromToken().get(), UserGetDTO.class));
     }
 
     @PutMapping("/users")
