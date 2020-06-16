@@ -26,4 +26,6 @@ public class UserGetDTO {
     private String email;
 
     private EnumUserGroup userGroup;
+
+    private Long points;
 }
