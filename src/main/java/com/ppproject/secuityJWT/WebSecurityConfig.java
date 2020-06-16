@@ -76,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/garbagePoint/{id}").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT,"/api/verifyGarbagePoint").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/api/verifyGarbagePoint/{garbagePointId}").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()

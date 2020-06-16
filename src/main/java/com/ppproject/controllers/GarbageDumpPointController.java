@@ -127,8 +127,8 @@ public class GarbageDumpPointController {
         }).orElse(ResponseEntity.badRequest().body("There is no garbage point with given ID"));
     }
 
-    @PutMapping("verifyGarbagePoint")
-    public ResponseEntity<?> verifyGarbagePoint(@Valid @RequestBody Long garbagePointId) {
+    @PutMapping("verifyGarbagePoint/{garbagePointId}")
+    public ResponseEntity<?> verifyGarbagePoint(@Valid @PathVariable Long garbagePointId) {
         Optional<EntityGarbageDumpPoint> garbageDumpPoint = serviceGarbageDumpPoint.get(garbagePointId);
         return garbageDumpPoint.map(entityGarbageDumpPoint -> {
             entityGarbageDumpPoint.setVerified(true);
