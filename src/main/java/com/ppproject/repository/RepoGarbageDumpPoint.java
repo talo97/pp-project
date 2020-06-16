@@ -11,5 +11,6 @@ import java.util.List;
 public interface RepoGarbageDumpPoint extends JpaRepository<EntityGarbageDumpPoint, Long> {
     List<EntityGarbageDumpPoint> findAllByUser(EntityUser user);
     List<EntityGarbageDumpPoint> findAllByVerifiedFalse();
+    List<EntityGarbageDumpPoint> findAllByVerifiedTrue();
 
 }

@@ -73,7 +73,7 @@ public class GarbageDumpPointController {
     @GetMapping("/garbagePoints")
     public ResponseEntity<List<GarbagePointGetDTO>> getGarbagePoints() {
         List<GarbagePointGetDTO> lst = new ArrayList<>();
-        serviceGarbageDumpPoint.getAll().forEach(e -> {
+        serviceGarbageDumpPoint.findAllByVerifiedTrue().forEach(e -> {
             GarbagePointGetDTO temp = modelMapper.map(e, GarbagePointGetDTO.class);
             temp.setUser(modelMapper.map(e.getUser(), UserGetDTO.class));
             lst.add(temp);

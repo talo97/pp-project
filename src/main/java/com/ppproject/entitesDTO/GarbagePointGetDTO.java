@@ -15,4 +15,5 @@ public class GarbagePointGetDTO {
     private Double longitude;
     private String imageUrl;
     private UserGetDTO user;
+    private boolean verified;
 }

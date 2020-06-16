@@ -39,4 +39,9 @@ public class ServiceGarbageDumpPointImpl extends CommonServiceImpl<EntityGarbage
         toSave.setUser(user);
         return save(toSave);
     }
+
+    @Override
+    public List<EntityGarbageDumpPoint> findAllByVerifiedTrue() {
+        return repository.findAllByVerifiedTrue();
+    }
 }
