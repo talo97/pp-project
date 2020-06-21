@@ -11,7 +11,6 @@ import com.ppproject.entities.EntityUser;
 import com.ppproject.services.ServiceGarbageDumpPoint;
 import com.ppproject.services.ServiceUser;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +43,7 @@ public class GarbageDumpPointController {
         return serviceUser.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
-    @RequestMapping(name = "/garbagePoints", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/garbagePoints")
     public ResponseEntity<GarbagePointGetDTO> addGarbagePoint(@Valid @ModelAttribute GarbagePointPostDTO garbagePoint, @Valid @RequestPart MultipartFile image) throws IOException {
         EntityUser user = getUserFromToken().get();
         String fileUrl = "";
