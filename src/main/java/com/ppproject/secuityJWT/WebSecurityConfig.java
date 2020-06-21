@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/authenticate",
             "/api/users",
             "/api/createAdmin",
-            "/api/garbagePoint"
+            "/api/garbagePoints"
     };
 
     public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService jwtUserDetailsService, JwtRequestFilter jwtRequestFilter) {
