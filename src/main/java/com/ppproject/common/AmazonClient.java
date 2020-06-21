@@ -44,7 +44,6 @@ public class AmazonClient {
     }
 
     public String uploadFile(MultipartFile multipartFile) throws IOException, AmazonServiceException, AmazonClientException {
-
         String fileUrl = "";
         File file = convertMultiPartToFile(multipartFile);
         String fileName = generateFileName(multipartFile);
@@ -52,7 +51,6 @@ public class AmazonClient {
         uploadFileTos3bucket(fileName, file);
         file.delete();
         return fileUrl;
-
     }
 
     public String deleteFileFromS3Bucket(String fileUrl) {
