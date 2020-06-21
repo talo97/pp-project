@@ -44,7 +44,7 @@ public class GarbageDumpPointController {
         return serviceUser.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
-    @PostMapping(name = "/garbagePoints", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(name = "/garbagePoints", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<GarbagePointGetDTO> addGarbagePoint(@Valid @ModelAttribute GarbagePointPostDTO garbagePoint, @Valid @RequestPart MultipartFile image) throws IOException {
         EntityUser user = getUserFromToken().get();
         String fileUrl = "";
