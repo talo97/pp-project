@@ -44,7 +44,7 @@ public class GarbageDumpPointController {
     }
 
     @PostMapping("/garbagePoints")
-    public ResponseEntity<?> addGarbagePoint(@Valid @RequestParam("garbagePoint") GarbagePointPostDTO garbagePoint, @Valid @RequestParam("image") MultipartFile image) throws IOException {
+    public ResponseEntity<?> addGarbagePoint(@Valid @ModelAttribute("garbagePoint") GarbagePointPostDTO garbagePoint, @Valid @RequestParam("image") MultipartFile image) throws IOException {
         EntityUser user = getUserFromToken().get();
         String fileUrl = "";
         try {
