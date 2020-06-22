@@ -43,33 +43,31 @@ public class GarbageDumpPointController {
         return serviceUser.findByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
-    //@RequestMapping(value = "/garbagePoints", method = RequestMethod.POST, headers = ("content-type=multipart/form-data;boundary=059h2BBM-KlM_XP2rY8W1X3_jnzFLcYY;charset=UTF-8") )
-    //public ResponseEntity<GarbagePointGetDTO> addGarbagePoint(@Valid @ModelAttribute GarbagePointPostDTO garbagePoint, @Valid @RequestPart MultipartFile image) throws IOException {
     @PostMapping("/garbagePoints")
-    public ResponseEntity<?> addGarbagePoint(@RequestParam("image") MultipartFile image) throws IOException {
-//        EntityUser user = getUserFromToken().get();
-//        String fileUrl = "";
-//        try {
-//            fileUrl = amazonClient.uploadFile(image);
-//        } catch (AmazonServiceException ase) {
-//            System.out.println("Caught an AmazonServiceException from GET requests, rejected reasons:");
-//            System.out.println("Error Message:    " + ase.getMessage());
-//            System.out.println("HTTP Status Code: " + ase.getStatusCode());
-//            System.out.println("AWS Error Code:   " + ase.getErrorCode());
-//            System.out.println("Error Type:       " + ase.getErrorType());
-//            System.out.println("Request ID:       " + ase.getRequestId());
-//            return ResponseEntity.badRequest().build();
-//        } catch (AmazonClientException ace) {
-//            System.out.println("Caught an AmazonClientException: ");
-//            System.out.println("Error Message: " + ace.getMessage());
-//            return ResponseEntity.badRequest().build();
-//        } catch (IOException ioe) {
-//            System.out.println("IOE Error Message: " + ioe.getMessage());
-//            return ResponseEntity.badRequest().build();
-//        }
-//        GarbagePointGetDTO garbagePointGetDTO = modelMapper.map(serviceGarbageDumpPoint.save(garbagePoint, user, fileUrl), GarbagePointGetDTO.class);
-//        garbagePointGetDTO.setUser(modelMapper.map(user, UserGetDTO.class));
-        return ResponseEntity.ok("ok");
+    public ResponseEntity<?> addGarbagePoint(@Valid @RequestParam("garbagePoint") GarbagePointPostDTO garbagePoint, @Valid @RequestParam("image") MultipartFile image) throws IOException {
+        EntityUser user = getUserFromToken().get();
+        String fileUrl = "";
+        try {
+            fileUrl = amazonClient.uploadFile(image);
+        } catch (AmazonServiceException ase) {
+            System.out.println("Caught an AmazonServiceException from GET requests, rejected reasons:");
+            System.out.println("Error Message:    " + ase.getMessage());
+            System.out.println("HTTP Status Code: " + ase.getStatusCode());
+            System.out.println("AWS Error Code:   " + ase.getErrorCode());
+            System.out.println("Error Type:       " + ase.getErrorType());
+            System.out.println("Request ID:       " + ase.getRequestId());
+            return ResponseEntity.badRequest().build();
+        } catch (AmazonClientException ace) {
+            System.out.println("Caught an AmazonClientException: ");
+            System.out.println("Error Message: " + ace.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (IOException ioe) {
+            System.out.println("IOE Error Message: " + ioe.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+        GarbagePointGetDTO garbagePointGetDTO = modelMapper.map(serviceGarbageDumpPoint.save(garbagePoint, user, fileUrl), GarbagePointGetDTO.class);
+        garbagePointGetDTO.setUser(modelMapper.map(user, UserGetDTO.class));
+        return ResponseEntity.ok(garbagePointGetDTO);
     }
 
     @GetMapping("/garbagePoints")
