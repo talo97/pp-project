@@ -133,6 +133,9 @@ public class GarbageDumpPointController {
         return garbageDumpPoint.map(entityGarbageDumpPoint -> {
             entityGarbageDumpPoint.setVerified(true);
             serviceGarbageDumpPoint.save(entityGarbageDumpPoint);
+            EntityUser user = entityGarbageDumpPoint.getUser();
+            user.setPoints(user.getPoints() + 1L);
+            serviceUser.save(user);
             return ResponseEntity.ok("Successfully verified");
         }).orElse(ResponseEntity.badRequest().body("There is no garbage point with given ID"));
     }
